@@ -3,7 +3,6 @@ import {
   type NoSerialize,
   useVisibleTask$,
   noSerialize,
-  useTask$,
 } from '@builder.io/qwik';
 import { initializeApp } from 'firebase/app';
 import {
@@ -13,7 +12,6 @@ import {
   type DocumentData,
   type DocumentReference,
   getDoc,
-  type Firestore,
 } from 'firebase/firestore';
 import { type FirebaseStorage, getStorage } from 'firebase/storage';
 import type { Product } from '~/types/Product';
@@ -46,26 +44,7 @@ export const useFireBaseStorage = () => {
   return store.storageInstance;
 };
 
-/**
- * Retrieves the Firestore instance.
- *
- * @returns the Firestore instance
- */
-export const useFirestore = () => {
-  const store = useStore<{ firestoreInstance: NoSerialize<Firestore> }>({
-    firestoreInstance: undefined,
-  });
-
-  useTask$(async ({ track }) => {
-    track(() => store.firestoreInstance);
-
-    const getDB = $(() => getFirestore(firebaseApp));
-
-    store.firestoreInstance = noSerialize(await getDB());
-  });
-
-  return store.firestoreInstance;
-};
+export const getFirebaseStorage = $(() => getStorage(firebaseApp));
 
 export const getDB = $(() => getFirestore(firebaseApp));
 
