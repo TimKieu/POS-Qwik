@@ -1,47 +1,35 @@
-import {
-  component$,
-  $,
-  useContext,
-  type QwikSubmitEvent,
-} from '@builder.io/qwik';
-import { Link, useNavigate } from '@builder.io/qwik-city';
+import { component$, useContext } from '@builder.io/qwik';
+import { Form, Link, routeAction$, z, zod$ } from '@builder.io/qwik-city';
 import { Label } from '~/components/ui/Label';
 import { ProductsContext } from '~/context/product/ProductsContext';
+import { createProduct } from '~/helpers/products';
 import { useImage } from '~/hooks/useImage';
+
+export const useCreateProduct = routeAction$(
+  async (values, { redirect }) => {
+    await createProduct({
+      availability: Number(values.availability),
+      category: Number(values.category),
+      image: values.image,
+      name: values.name,
+      price: Number(values.price),
+    });
+    throw redirect(302, '/admin/products');
+  },
+  zod$({
+    name: z.string(),
+    image: z.any(),
+    category: z.string(),
+    price: z.string(),
+    availability: z.string(),
+  })
+);
 
 export default component$(() => {
   const { onFileChange, imgUrl, isImgUploaded } = useImage();
 
-  const { categories, createProduct } = useContext(ProductsContext);
-
-  const nav = useNavigate();
-
-  const handleSubmit = $(async (e: QwikSubmitEvent<HTMLFormElement>) => {
-    const target = e.target as HTMLFormElement;
-    const formData = new FormData(target);
-    try {
-      const values = Object.fromEntries(formData) as {
-        name: string;
-        image: File;
-        category: string;
-        price: string;
-        availability: string;
-      };
-
-      const valuesParsed = {
-        ...values,
-        price: Number(values.price),
-        availability: Number(values.availability),
-        category: Number(values.category),
-        image: imgUrl.value,
-      };
-
-      await nav('/admin/products/');
-      await createProduct(valuesParsed);
-    } catch (error) {
-      console.log(error);
-    }
-  });
+  const { categories } = useContext(ProductsContext);
+  const createProduct = useCreateProduct();
 
   return (
     <>
@@ -55,9 +43,9 @@ export default component$(() => {
 
       <div class="flex justify-center bg-white shadow">
         <div class="mt-10 p-10 w-full 2xl:w-2/4">
-          <form
+          <Form
+            action={createProduct}
             class="flex flex-col"
-            onSubmit$={handleSubmit}
             preventdefault:submit
           >
             <Label>Nombre</Label>
@@ -69,9 +57,9 @@ export default component$(() => {
             />
 
             <Label>Imagen del producto</Label>
+            <input type="hidden" name="image" value={imgUrl.value} />
             <input
               type="file"
-              name="image"
               accept=".jpg"
               class="file-input file-input-bordered file-input-md w-full max-w-xs"
               onChange$={onFileChange}
@@ -113,7 +101,7 @@ export default component$(() => {
             <button type="submit" class="btn btn-success my-2">
               Agregar Producto
             </button>
-          </form>
+          </Form>
         </div>
       </div>
     </>
