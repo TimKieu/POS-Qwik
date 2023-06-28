@@ -1,63 +1,56 @@
+import { component$, useContext } from '@builder.io/qwik';
 import {
-  type QwikSubmitEvent,
-  component$,
-  $,
-  useContext,
-  useTask$,
-  useSignal,
-} from '@builder.io/qwik';
-import { Link, useLocation, useNavigate } from '@builder.io/qwik-city';
-import { doc } from 'firebase/firestore';
+  Form,
+  Link,
+  routeAction$,
+  routeLoader$,
+  z,
+  zod$,
+} from '@builder.io/qwik-city';
 import { Label } from '~/components/ui/Label';
-import { getDB, getDocument } from '~/config/firebase';
 import { ProductsContext } from '~/context/product/ProductsContext';
-import { parseFormData } from '~/helpers';
+import { getProductById, updateProductById } from '~/helpers/products';
 import { useImage } from '~/hooks/useImage';
-import type { Product as IProduct } from '~/types/Product';
+
+export const useUpdateProduct = routeAction$(
+  async (values, { params, redirect }) => {
+    const id = params.id;
+
+    if (!id)
+      return {
+        error: 'No se encontro el producto',
+      };
+
+    await updateProductById(id, {
+      availability: Number(values.availability),
+      category: Number(values.category),
+      image: values.image,
+      name: values.name,
+      price: Number(values.price),
+    });
+
+    throw redirect(302, '/admin/products');
+  },
+  zod$({
+    name: z.string(),
+    image: z.string(),
+    category: z.string(),
+    price: z.string(),
+    availability: z.string(),
+  })
+);
+
+export const useProduct = routeLoader$(({ params }) => {
+  const id = params.id;
+  return getProductById(id);
+});
 
 export default component$(() => {
-  const { categories, updateProduct } = useContext(ProductsContext);
+  const { categories } = useContext(ProductsContext);
   const { onFileChange, imgUrl, isImgUploaded } = useImage();
+  const product = useProduct();
+  const updateProduct = useUpdateProduct();
 
-  const nav = useNavigate();
-  const location = useLocation();
-
-  // const db = useFirestore();
-
-  const product = useSignal({} as IProduct);
-  // const docRef = doc(db, 'product', location.params.id);
-
-  const getDocProductRef = $(async () =>
-    doc(await getDB(), 'product', location.params.id)
-  );
-
-  useTask$(async () => {
-    const productFound = await getDocument(await getDocProductRef());
-
-    if (!productFound) await nav('/admin/products/');
-
-    product.value = productFound as IProduct;
-  });
-
-  const handleSubmit = $(async (e: QwikSubmitEvent<HTMLFormElement>) => {
-    const target = e.target as HTMLFormElement;
-    const formData = new FormData(target);
-    const payload = parseFormData(formData);
-
-    const values = {
-      ...payload,
-      image: imgUrl.value,
-    } satisfies Omit<IProduct, 'id'>;
-
-    try {
-      await updateProduct(await getDocProductRef(), values);
-
-      // await rereadCurrentProducts();
-      await nav('/admin/products/', true);
-    } catch (error) {
-      console.log(error);
-    }
-  });
   return (
     <>
       <Link
@@ -70,9 +63,9 @@ export default component$(() => {
 
       <div class="flex justify-center bg-white shadow">
         <div class="mt-10 p-10 w-full 2xl:w-2/4">
-          <form
+          <Form
             class="flex flex-col"
-            onSubmit$={handleSubmit}
+            action={updateProduct}
             preventdefault:submit
           >
             <Label>Nombre</Label>
@@ -85,9 +78,9 @@ export default component$(() => {
             />
 
             <Label>Imagen del producto</Label>
+            <input type="hidden" name="image" value={imgUrl.value} />
             <input
               type="file"
-              name="image"
               accept=".jpg"
               class="file-input file-input-bordered file-input-md w-full max-w-xs"
               onChange$={onFileChange}
@@ -145,7 +138,7 @@ export default component$(() => {
             <button type="submit" class="btn btn-success my-2">
               Editar Producto
             </button>
-          </form>
+          </Form>
         </div>
       </div>
     </>
