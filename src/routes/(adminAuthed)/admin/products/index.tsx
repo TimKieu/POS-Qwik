@@ -1,7 +1,6 @@
-import { component$, useContext } from '@builder.io/qwik';
+import { component$, useComputed$ } from '@builder.io/qwik';
 import { Link, routeLoader$ } from '@builder.io/qwik-city';
 import { Product } from '~/components/product/Product';
-import { ProductsContext } from '~/context/product/ProductsContext';
 import { getProducts } from '~/helpers/products';
 
 export const useProducts = routeLoader$(() => {
@@ -9,8 +8,10 @@ export const useProducts = routeLoader$(() => {
 });
 
 export default component$(() => {
-  const { isProductsEmpty } = useContext(ProductsContext);
   const products = useProducts();
+
+  const isProductsEmpty = useComputed$(() => products.value.length === 0);
+
   return (
     <>
       <Link
@@ -21,7 +22,7 @@ export default component$(() => {
       </Link>
       <h1 class="text-4xl font-black my-10">Productos</h1>
 
-      {isProductsEmpty && (
+      {isProductsEmpty.value && (
         <p class="text-2xl font-bold text-center">
           No hay productos disponibles
         </p>
