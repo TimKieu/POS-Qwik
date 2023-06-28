@@ -12,7 +12,7 @@ import { deleteObject, ref } from 'firebase/storage';
 import { getCollection, getDB, getFirebaseStorage } from '~/config/firebase';
 import type { Product } from '~/types/Product';
 
-const collectionRef = collection(await getDB(), 'product');
+const collectionRef = collection(await getDB(), 'products');
 
 const getDocProductRef = async (id: string) =>
   doc(await getDB(), 'product', id);
