@@ -1,7 +1,7 @@
 import { Form, Link, routeAction$ } from '@builder.io/qwik-city';
 import { $, component$ } from '@builder.io/qwik';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { getDB, getFirebaseStorage } from '~/config/firebase';
+import { getDB, getFirebaseStorage } from '~/lib/firebase';
 import { addDoc, collection } from 'firebase/firestore';
 import { products } from '~/data/products';
 import { useSignal } from '@builder.io/qwik';
