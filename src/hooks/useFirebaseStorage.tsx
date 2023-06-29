@@ -8,7 +8,7 @@ import { type FirebaseStorage, getStorage } from 'firebase/storage';
 import { firebaseApp } from '~/lib/firebase';
 
 // this  returns a storage
-export const useFireBaseStorage = () => {
+export const useFirebaseStorage = () => {
   const store = useStore<{ storageInstance: NoSerialize<FirebaseStorage> }>({
     storageInstance: undefined,
   });

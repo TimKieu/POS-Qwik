@@ -10,10 +10,10 @@ import {
   getDownloadURL,
 } from 'firebase/storage';
 import { nanoid } from 'nanoid';
-import { useFireBaseStorage } from './useFirebaseStorage';
+import { useFirebaseStorage } from './useFirebaseStorage';
 
 export const useImage = () => {
-  const storage = useFireBaseStorage();
+  const storage = useFirebaseStorage();
   const imgUrl = useSignal('');
 
   const onFileChange = $((e: QwikChangeEvent<HTMLInputElement>) => {
