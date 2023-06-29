@@ -9,7 +9,7 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
-import { getCollection, getDB, getFirebaseStorage } from '~/config/firebase';
+import { getCollection, getDB, getFirebaseStorage } from '~/lib/firebase';
 import type { Product } from '~/types/Product';
 
 const collectionRef = collection(await getDB(), 'products');
