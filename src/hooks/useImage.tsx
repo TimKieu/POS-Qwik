@@ -9,8 +9,8 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from 'firebase/storage';
-import { useFireBaseStorage } from '~/config/firebase';
 import { nanoid } from 'nanoid';
+import { useFireBaseStorage } from './useFirebaseStorage';
 
 export const useImage = () => {
   const storage = useFireBaseStorage();
