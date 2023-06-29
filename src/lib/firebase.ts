@@ -9,7 +9,6 @@ import {
 } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import type { Product } from '~/types/Product';
-import { $ } from '@builder.io/qwik';
 import type { Product as IProduct } from '~/types/Product';
 
 const firebaseConfig = {
@@ -23,11 +22,13 @@ const firebaseConfig = {
 
 export const firebaseApp = initializeApp(firebaseConfig);
 
-export const getFirebaseStorage = $(() => getStorage(firebaseApp));
+// My Server methods
 
-export const getDB = $(() => getFirestore(firebaseApp));
+export const getFirebaseStorage = () => getStorage(firebaseApp)
 
-export const getCollection = $(async (q: Query<DocumentData>) => {
+export const getDB = () => getFirestore(firebaseApp)
+
+export const getCollection = async (q: Query<DocumentData>) => {
   const productSnapshot = await getDocs(q);
 
   const productList = productSnapshot.docs.map((doc) => ({
@@ -36,14 +37,13 @@ export const getCollection = $(async (q: Query<DocumentData>) => {
   })) as Product[];
 
   return productList;
-});
+}
 
-export const getDocument = $(
-  async (docRef: DocumentReference<DocumentData>) => {
-    const docSnapshot = await getDoc(docRef);
-    return {
-      ...docSnapshot.data(),
-      id: docSnapshot.id,
-    } as IProduct;
-  }
-);
+export const getDocument = async (docRef: DocumentReference<DocumentData>) => {
+  const docSnapshot = await getDoc(docRef);
+  return {
+    ...docSnapshot.data(),
+    id: docSnapshot.id,
+  } as IProduct;
+}
+
