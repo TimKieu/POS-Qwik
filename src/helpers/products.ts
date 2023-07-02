@@ -7,15 +7,15 @@ import {
   orderBy,
   query,
   updateDoc,
+  where,
 } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
 import { getCollection, getDB, getFirebaseStorage } from '~/lib/firebase';
 import type { Product } from '~/types/Product';
 
-const collectionRef = collection(await getDB(), 'products');
+const collectionRef = collection(getDB(), 'products');
 
-const getDocProductRef = async (id: string) =>
-  doc(await getDB(), 'product', id);
+const getDocProductRef = async (id: string) => doc(getDB(), 'product', id);
 
 export const getProductById = async (id: string) => {
   const docRef = await getDocProductRef(id);
@@ -25,6 +25,11 @@ export const getProductById = async (id: string) => {
 
 export const getProducts = async () => {
   const q = query(collectionRef, orderBy('availability', 'asc'));
+  return await getCollection(q);
+};
+
+export const getProductsByCategory = async (categoryId: number) => {
+  const q = query(collectionRef, where('category', '==', categoryId));
   return await getCollection(q);
 };
 
@@ -60,6 +65,6 @@ export const deleteProduct = async (id: string) => {
   const docSnap = await getDoc(docRef);
   const { image } = docSnap.data() as Omit<Product, 'id'>;
 
-  const imgRef = ref(await getFirebaseStorage(), image);
+  const imgRef = ref(getFirebaseStorage(), image);
   await Promise.all([deleteDoc(docRef), deleteObject(imgRef)]);
 };
