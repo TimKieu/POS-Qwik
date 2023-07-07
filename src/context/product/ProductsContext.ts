@@ -1,18 +1,14 @@
 import { type Signal, createContextId } from '@builder.io/qwik';
 
-type Category = {
+export type Category = {
   id: number;
   name: string;
 };
 
-export type ProductsStore = {
-  categories: Category[];
-  isProductsEmpty: boolean;
-};
-
 export type ProductContext = {
-  productsStore: ProductsStore;
+  categories: Signal<Category[]>;
   categorySelected: Signal<number>;
+  isProductsEmpty: Signal<boolean>;
 };
 
 export const ProductsContext = createContextId<ProductContext>('products');
