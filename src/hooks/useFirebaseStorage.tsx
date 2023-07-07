@@ -13,9 +13,9 @@ export const useFirebaseStorage = () => {
     storageInstance: undefined,
   });
 
-  useVisibleTask$(() => {
+  useVisibleTask$(async () => {
     // This works only in the browser
-    const storage = getStorage(firebaseApp);
+    const storage = getStorage(await firebaseApp());
     store.storageInstance = noSerialize(storage);
   });
 
