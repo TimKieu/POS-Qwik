@@ -28,7 +28,7 @@ export const useCreateProduct = routeAction$(
 export default component$(() => {
   const { onFileChange, imgUrl, isImgUploaded } = useImage();
 
-  const { productsStore } = useContext(ProductsContext);
+  const { categories } = useContext(ProductsContext);
   const createProduct = useCreateProduct();
 
   return (
@@ -73,7 +73,7 @@ export default component$(() => {
 
             <Label>Categoria</Label>
             <select class="select w-full max-w-xs bg-base-200" name="category">
-              {productsStore.categories.map(({ id, name }) => (
+              {categories.value.map(({ id, name }) => (
                 <option value={id} key={id}>
                   {name}
                 </option>
