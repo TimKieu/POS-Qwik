@@ -1,10 +1,13 @@
 import { Slot, component$ } from '@builder.io/qwik';
+import { CartProvider } from '~/context/cart/CartProvider';
 import { ProductsProvider } from '~/context/product/ProductsProvider';
 
 export default component$(() => {
   return (
     <ProductsProvider>
-      <Slot />
+      <CartProvider>
+        <Slot />
+      </CartProvider>
     </ProductsProvider>
   );
 });
