@@ -13,7 +13,7 @@ import { deleteObject, ref } from 'firebase/storage';
 import { getCollection, getDB, getFirebaseStorage } from '~/lib/firebase';
 import type { Product } from '~/types/Product';
 
-const collectionRef = collection(await getDB(), 'products');
+const collectionRef = async () => collection(await getDB(), 'products');
 
 const getDocProductRef = async (id: string) =>
   doc(await getDB(), 'product', id);
@@ -25,17 +25,17 @@ export const getProductById = async (id: string) => {
 };
 
 export const getProducts = async () => {
-  const q = query(collectionRef, orderBy('availability', 'asc'));
+  const q = query(await collectionRef(), orderBy('availability', 'asc'));
   return await getCollection(q);
 };
 
 export const getProductsByCategory = async (categoryId: number) => {
-  const q = query(collectionRef, where('category', '==', categoryId));
+  const q = query(await collectionRef(), where('category', '==', categoryId));
   return await getCollection(q);
 };
 
 export const createProduct = async (product: Omit<Product, 'id'>) => {
-  await addDoc(collectionRef, product);
+  await addDoc(await collectionRef(), product);
 };
 
 export const updateProductById = async (
