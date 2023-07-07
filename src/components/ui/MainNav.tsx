@@ -4,7 +4,7 @@ import { Logo } from './Logo';
 import { ProductsContext } from '../../context/product/ProductsContext';
 
 export const MainNav = component$(() => {
-  const { productsStore, categorySelected } = useContext(ProductsContext);
+  const { categories, categorySelected } = useContext(ProductsContext);
 
   return (
     <header class="px-10 py-5 bg-gray-800 flex flex-col lg:flex-row gap-5 lg:items-center lg:justify-between absolute top-0 w-full z-10 items-center">
@@ -12,7 +12,7 @@ export const MainNav = component$(() => {
         <Logo />
         <div class="flex gap-5 text-white">
           <h2 class="text-lg font-extrabold">Filtros:</h2>
-          {productsStore.categories.map(({ id, name }) => {
+          {categories.value.map(({ id, name }) => {
             return (
               <Link
                 class="flex items-center gap-2"
