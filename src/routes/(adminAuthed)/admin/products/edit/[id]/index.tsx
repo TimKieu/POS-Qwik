@@ -46,7 +46,7 @@ export const useProduct = routeLoader$(({ params }) => {
 });
 
 export default component$(() => {
-  const { productsStore } = useContext(ProductsContext);
+  const { categories } = useContext(ProductsContext);
   const { onFileChange, imgUrl, isImgUploaded } = useImage();
   const product = useProduct();
   const updateProduct = useUpdateProduct();
@@ -108,7 +108,7 @@ export default component$(() => {
               name="category"
               value={product.value.category}
             >
-              {productsStore.categories.map(({ id, name }) => (
+              {categories.value.map(({ id, name }) => (
                 <option value={id} key={id}>
                   {name}
                 </option>
