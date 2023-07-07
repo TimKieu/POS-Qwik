@@ -4,8 +4,9 @@ import {
   useContext,
   useVisibleTask$,
 } from '@builder.io/qwik';
-import { routeLoader$ } from '@builder.io/qwik-city';
+import { routeLoader$, useLocation } from '@builder.io/qwik-city';
 import { ProductCard } from '~/components/product/ProductCard';
+import { ShoppingCart } from '~/components/product/ShoppingCart';
 import { ProductsContext } from '~/context/product/ProductsContext';
 import { getProductsByCategory } from '~/helpers/products';
 
@@ -24,11 +25,12 @@ export const useProductsLoader = routeLoader$(({ query }) => {
 export default component$(() => {
   const products = useProductsLoader();
   const isResultsEmpty = useComputed$(() => products.value.length === 0);
-
   const { categorySelected } = useContext(ProductsContext);
+  const loc = useLocation();
 
   useVisibleTask$(() => {
-    categorySelected.value = 2;
+    const category = Number(loc.url.searchParams.get('category'));
+    categorySelected.value = category;
   });
 
   return (
@@ -44,7 +46,9 @@ export default component$(() => {
           </div>
         )}
       </section>
-      <aside class="lg:w-1/3 lg:h-screen lg:overflow-y-scroll pt-10 pb-32 px-10"></aside>
+      <aside class="lg:w-1/3 lg:h-screen lg:overflow-y-scroll py-24 px-10">
+        <ShoppingCart />
+      </aside>
     </main>
   );
 });
