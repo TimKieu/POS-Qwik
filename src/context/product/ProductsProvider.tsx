@@ -1,36 +1,36 @@
 import {
   Slot,
   component$,
+  useComputed$,
   useContextProvider,
   useSignal,
-  useStore,
 } from '@builder.io/qwik';
 
-import { ProductsContext, type ProductsStore } from './ProductsContext';
+import { type Category, ProductsContext } from './ProductsContext';
 
 export const ProductsProvider = component$(() => {
-  const productsStore = useStore<ProductsStore>({
-    categories: [
-      {
-        id: 1,
-        name: 'Sudaderas',
-      },
-      {
-        id: 2,
-        name: 'Tenis',
-      },
-      {
-        id: 3,
-        name: 'Lentes',
-      },
-    ],
-    isProductsEmpty: false,
-  });
+  const categories = useSignal<Category[]>([
+    {
+      id: 1,
+      name: 'Sudaderas',
+    },
+    {
+      id: 2,
+      name: 'Tenis',
+    },
+    {
+      id: 3,
+      name: 'Lentes',
+    },
+  ]);
   const categorySelected = useSignal(1);
 
+  const isProductsEmpty = useComputed$(() => categories.value.length === 0);
+
   useContextProvider(ProductsContext, {
-    productsStore,
+    categories,
     categorySelected,
+    isProductsEmpty,
   });
   return <Slot />;
 });
