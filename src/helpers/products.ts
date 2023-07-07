@@ -13,9 +13,10 @@ import { deleteObject, ref } from 'firebase/storage';
 import { getCollection, getDB, getFirebaseStorage } from '~/lib/firebase';
 import type { Product } from '~/types/Product';
 
-const collectionRef = collection(getDB(), 'products');
+const collectionRef = collection(await getDB(), 'products');
 
-const getDocProductRef = async (id: string) => doc(getDB(), 'product', id);
+const getDocProductRef = async (id: string) =>
+  doc(await getDB(), 'product', id);
 
 export const getProductById = async (id: string) => {
   const docRef = await getDocProductRef(id);
@@ -65,6 +66,6 @@ export const deleteProduct = async (id: string) => {
   const docSnap = await getDoc(docRef);
   const { image } = docSnap.data() as Omit<Product, 'id'>;
 
-  const imgRef = ref(getFirebaseStorage(), image);
+  const imgRef = ref(await getFirebaseStorage(), image);
   await Promise.all([deleteDoc(docRef), deleteObject(imgRef)]);
 };
