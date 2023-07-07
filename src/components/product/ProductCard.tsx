@@ -1,4 +1,5 @@
-import { component$ } from '@builder.io/qwik';
+import { component$, useContext } from '@builder.io/qwik';
+import { CartContext } from '~/context/cart/CartContext';
 import { formatCurrency } from '~/helpers';
 import type { Product } from '~/types/Product';
 
@@ -7,6 +8,7 @@ export interface ProductCardProps {
 }
 
 export const ProductCard = component$<ProductCardProps>(({ product }) => {
+  const { addItem } = useContext(CartContext);
   return (
     <div class="rounded bg-white shadow relative">
       <figure>
@@ -27,7 +29,13 @@ export const ProductCard = component$<ProductCardProps>(({ product }) => {
         </p>
       </section>
 
-      <button type="submit" class="absolute top-5 -right-4">
+      <button
+        type="button"
+        class="absolute top-5 -right-4"
+        onClick$={() => {
+          addItem(product);
+        }}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
