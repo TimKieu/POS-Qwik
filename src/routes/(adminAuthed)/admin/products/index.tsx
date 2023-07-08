@@ -3,8 +3,15 @@ import { Link, routeLoader$ } from '@builder.io/qwik-city';
 import { Product } from '~/components/product/Product';
 import { getProducts } from '~/helpers/products';
 
-export const useProducts = routeLoader$(() => {
-  return getProducts();
+export const useProducts = routeLoader$(async () => {
+  try {
+    const products = await getProducts();
+
+    return products;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 });
 
 export default component$(() => {
