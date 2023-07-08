@@ -1,6 +1,6 @@
 {
-  "name": "my-qwik-empty-starter",
-  "description": "App with Routing built-in ready to create your app",
+  "name": "Pos Qwik",
+  "description": "Lets you create and manage your own POS system",
   "engines": {
     "node": ">=15.0.0"
   },
@@ -39,8 +39,7 @@
     "typescript": "5.1.6",
     "undici": "5.22.1",
     "vite": "4.4.2",
-    "vite-tsconfig-paths": "4.2.0",
-    "wrangler": "^3.0.0"
+    "vite-tsconfig-paths": "4.2.0"
   },
   "dependencies": {
     "firebase": "^10.0.0",
