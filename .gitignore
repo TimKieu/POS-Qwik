@@ -4,6 +4,8 @@
 /lib-types
 /server
 
+pnpm-lock.yaml
+
 # Env
 .env
 .env.local
